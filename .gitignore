@@ -6,6 +6,7 @@ logs/
 
 # Node.js Backend (in backend-node/)
 Backend-node/node_modules/
+Backend-node/drizzle.config.js
 Backend-node/coverage/
 Backend-node/.env
 Backend-node/.env.*
