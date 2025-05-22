@@ -1,0 +1,101 @@
+.layout_container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .layout_wrapper{
+        width: 90%;
+        height: 90%;
+        background-color: rgb(233, 233, 233);
+
+        .layout_header{
+            width: 100%;
+            height: 10%;
+            background-color: rgb(9, 171, 185);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .layout_header_title{
+                flex: 1;
+                font-size: 1.5rem;
+                font-weight: 500;
+                margin-left: 1rem;
+            }
+
+            .layout_header_todoInput{
+                margin-right: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                .layout_header_input{
+                    width: 10rem;
+                    height: 2rem;
+                    border-radius: 5px;
+                    border: none;
+                    padding: 0.5rem;
+                }
+            }
+
+            .layout_add_button{
+                margin-right: 1rem;
+                width: 3rem;
+                height: 2rem;
+                border-radius: 5px;
+                border: none;
+                background-color: rgb(90, 221, 58);
+                cursor: pointer;
+            }
+        }
+
+        .layout_body{
+            width: 100%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+
+            .todo_item{
+                width: 97%;
+                height: 3rem;
+                background-color: rgb(194, 194, 194);
+                margin: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .todo_item_name{
+                    flex: 1;
+                    margin-left: 1rem;
+                }
+                .todo_item_update{
+                    margin-left: 64rem;
+                    width: 3rem;
+                    height: 2rem;
+                    border-radius: 5px;
+                    border: none;
+                    background-color: rgb(221, 167, 58);
+                    cursor: pointer;
+                }
+                .todo_item_input {
+                    margin-left: 1rem;
+                    padding: 0.3rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+                .todo_item_delete{
+                    margin-left: 1rem;
+                    width: 4rem;
+                    height: 2rem;
+                    border-radius: 5px;
+                    border: none;
+                    background-color: rgb(221, 58, 69);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

@@ -1,14 +1,22 @@
 import express from "express";
-import db from "../db/db_connect.js";        // Go up one level, then into db/
-import { userSchema } from "../db/schema.js"; // Same here
+import cors from "cors";
+import db from "../db/db_connect.js";
+import { userSchema } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 
-// ✅ Middleware for parsing JSON body
+// ✅ Allow requests from frontend (e.g., Vite runs on port 5173)
+app.use(cors({
+    origin: "http://localhost:5173", // Replace with your frontend's URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
 app.use(express.json());
 
+// Create User
 app.post("/create", async (req, res) => {
     try {
         const { name } = req.body;
@@ -19,10 +27,7 @@ app.post("/create", async (req, res) => {
 
         const id = uuidv4();
 
-        await db.insert(userSchema).values({
-            id,
-            name
-        });
+        await db.insert(userSchema).values({ id, name });
 
         const [user] = await db.select().from(userSchema).where(eq(userSchema.id, id));
         return res.json(user);
@@ -32,6 +37,7 @@ app.post("/create", async (req, res) => {
     }
 });
 
+// Get All Users
 app.get("/user", async (req, res) => {
     try {
         const users = await db.select().from(userSchema);
@@ -42,26 +48,25 @@ app.get("/user", async (req, res) => {
     }
 });
 
-
+// Update User
 app.put("/user/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const { name } = req.body;
 
         if (!name) {
-        return res.status(400).json({ error: "Name is required" });
+            return res.status(400).json({ error: "Name is required" });
         }
 
         const updateResult = await db
-        .update(userSchema)
-        .set({ name })
-        .where(eq(userSchema.id, id));
+            .update(userSchema)
+            .set({ name })
+            .where(eq(userSchema.id, id));
 
         if (updateResult.rowCount === 0) {
-        return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not found" });
         }
 
-        // Return updated user
         const [updatedUser] = await db.select().from(userSchema).where(eq(userSchema.id, id));
         res.json(updatedUser);
     } catch (error) {
@@ -70,6 +75,7 @@ app.put("/user/:id", async (req, res) => {
     }
 });
 
+// Delete User
 app.delete("/user/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -77,7 +83,7 @@ app.delete("/user/:id", async (req, res) => {
         const deleteResult = await db.delete(userSchema).where(eq(userSchema.id, id));
 
         if (deleteResult.rowCount === 0) {
-        return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not found" });
         }
 
         res.json({ message: "User deleted successfully" });
@@ -87,8 +93,6 @@ app.delete("/user/:id", async (req, res) => {
     }
 });
 
-
-
 app.listen(8000, () => {
-    console.log("Server is running on port 8000");
+    console.log("🚀 Server is running on port 8000");
 });
