@@ -7,27 +7,29 @@ import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 
-// ✅ Allow requests from frontend (e.g., Vite runs on port 5173)
 app.use(cors({
-    origin: "http://localhost:5173", // Replace with your frontend's URL
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
+    credentials: true,
 }));
+
 
 app.use(express.json());
 
-// Create User
 app.post("/create", async (req, res) => {
     try {
         const { name } = req.body;
+        const { month } = req.body;
 
         if (!name) {
             return res.status(400).json({ error: "Name is required" });
+        } else if (!month) {
+            return res.status(400).json({ error: "Month is required" });
         }
 
         const id = uuidv4();
 
-        await db.insert(userSchema).values({ id, name });
+        await db.insert(userSchema).values({ id, name, month });
 
         const [user] = await db.select().from(userSchema).where(eq(userSchema.id, id));
         return res.json(user);
@@ -53,14 +55,17 @@ app.put("/user/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const { name } = req.body;
+        const { month } = req.body;
 
         if (!name) {
             return res.status(400).json({ error: "Name is required" });
+        } else if (!month) {
+            return res.status(400).json({ error: "Month is required" });
         }
 
         const updateResult = await db
             .update(userSchema)
-            .set({ name })
+            .set({ name, month })
             .where(eq(userSchema.id, id));
 
         if (updateResult.rowCount === 0) {
